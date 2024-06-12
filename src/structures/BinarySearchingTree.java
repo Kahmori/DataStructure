@@ -46,6 +46,51 @@ public class BinarySearchingTree {
     inOrder(node.right);
   }
 
+  public boolean contains(int value){
+    return contains(root, value);
+  }
+
+  private boolean contains(final Node root, final int value){
+    if (root == null) return false;
+    if (root.value == value) return true;
+    if (value > root.value) return contains(root.right, value);
+    else return contains(root.left, value);
+  }
+
+  public int minValue(Node currentNode){
+    while (currentNode.left != null) {
+      currentNode = currentNode.left;
+    }
+    return currentNode.value;
+  }
+
+  public void deleteNode(int value){
+    root = deleteNode(root, value);
+  }
+
+  private Node deleteNode(final Node root, final int value){
+    if (root == null) return null;
+
+    if (value < root.value) {
+      root.left = deleteNode(root.left, value);
+    } else if (value > root.value){
+      root.right = deleteNode(root.right, value);
+    } else {
+      if ((root.left == null) && (root.right == null)) {
+        return null;
+      } else if (root.left == null) {
+        return root.right;
+      } else if (root.right == null) {
+        return root.left;
+      } else {
+        int minValue = minValue(root.right);
+        root.value = minValue;
+        root.right = deleteNode(root.right, minValue);
+      }
+    }
+    return root;
+  }
+
   public static void main(String[] args) {
     BinarySearchingTree tree = new BinarySearchingTree();
     tree.insert(37);
@@ -55,6 +100,11 @@ public class BinarySearchingTree {
     tree.insert(17);
     tree.insert(42);
     tree.insert(72);
+
+    System.out.println(tree.contains(11));
+    System.out.println(tree.contains(99));
+
+    tree.deleteNode(66);
 
     tree.inOrder();
   }
